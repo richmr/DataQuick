@@ -1,0 +1,54 @@
+.chip-placeholder-blank {
+	width: 90px;
+}
+
+.chip-placeholder-hover {
+	border: 2px dashed blue;
+}
+
+.chip-placeholder {
+	border: 2px dashed gray;
+}
+.chip-status-red {
+	border: 2px solid red;
+}
+
+.chip-status-green {
+	border: 2px solid green;
+}
+
+.chip-status-yellow {
+	border: 2px solid yellow;
+}
+
+.chip-black {
+	border: 2px solid black;
+}
+
+.rect {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 20px;
+	height: 20px;
+	border: 1px solid black;
+}
+
+.action-icons {
+	font-size: 3rem;
+	color: black;
+}
+
+.badge-left {
+	float: none;
+}
+
+.load-modal {
+	resize:none;
+	min-height:200px;
+}
+
+.save-modal {
+	resize:none;
+	min-height:200px;
+}	
