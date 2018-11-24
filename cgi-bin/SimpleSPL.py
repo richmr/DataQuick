@@ -33,11 +33,6 @@ class Mode(Enum):
 	SELECT = 1
 	SORT = 2
 
-class LogicJoin(Enum):
-	OR = 1
-	AND = 2
-	NOT = 3
-	
 class SimpleSPLparse:
 	
 	def __init__(self, dbconn, tablename = "ftsdata"):
@@ -48,21 +43,23 @@ class SimpleSPLparse:
 		The db connection (sqlite3 connection instance) is required to build the generic search query against all column names
 		"""
 		self.tablename = tablename
-		#self.dbconn = dbconn
-		#self.c = self.dbconn.cursor()
+		self.dbconn = dbconn
+		
 		# pIndex is the current parameter index, used for named parameters		
 		self.pIndex = 0
 		self.columns = []
 				
-	def getcolumns(self):
+	def getColumns(self):
 		"""
 		Builds and sets a list of all column names in the subject table
 		This is needed to ensure field limiters (i.e. first_name:mike) don't generate sql errors by asking for columns that don't exist
 		"""
-		query = 'PRAGMA table_info("'+self.tablename+'")'
+		query = 'PRAGMA table_info('+self.tablename+')'
+		print(query)
 		c = self.dbconn.cursor()
 		c.execute(query)
 		result = c.fetchall()
+		print(len(result))
 		# Going to assume sqlite keeps its PRAGMA return format and column order, this could clearly cause problems later
 		name_col = 1
 		type_col = 2
@@ -178,10 +175,16 @@ class SimpleSPLparse:
 		found = re.findall(regex, token)
 		if (len(found)):
 			paramStr = self.nextNamedParameter()
-			# TODO column validity checking!
-			retString = found[0][0] + "=:"+paramStr
+			column = found[0][0]
+			value = found[0][1]
+			if (len(self.columns) == 0):
+				# Need to load the columns up
+				self.getColumns()
+			if not column in self.columns:
+				raise NameError('There is no field named "'+column+'" in this database.')
+			retString = column + "=:"+paramStr
 			self.logicJoin(self.whereList, retString)
-			retDict = {paramStr:found[0][1]}
+			retDict = {paramStr:value}
 			self.paramDict = {**self.paramDict, **retDict}
 			return True
 			
@@ -207,21 +210,7 @@ class SimpleSPLparse:
 		return True
 
 
-#------------- Tests ---------------------
-test = SimpleSPLparse("none")
-#print(test.columnLimiter("bobyouruncle", Mode.SELECT))
-#print(test.ANDORNOT("bobyouruncle", Mode.SELECT))
-#print(test.ANDORNOT("and", Mode.SELECT))
-#print(test.ANDORNOT("NOT", Mode.SELECT))
-#test.parseQuery("");
-#test.parseQuery("Windows -temp")
-#test.parseQuery("Windows -temp name:bob AND occupation:plumber house:apartment")
-test.parseQuery("name:bob AND occupation:plumber NOT house:apartment")
 
-print(test.SQLStatement)
-print(test.paramDict)
-
-print("done")
 		
 			
 			
