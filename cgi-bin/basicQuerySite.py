@@ -35,26 +35,54 @@ from basicQuery import basicQuery
 import sys
 import json
 
+import cgitb
+import cgi
+
+cgitb.enable()
+
 def processPostJson():
-	query_string = sys.stdin.read()
-	querydict = json.loads(query_string)
+	#print("basicQuerySite.processPostJson: Running..", file=sys.stderr)
+
+	#query_string = sys.stdin.read()
+		
 	
-	if not "sourcedb" in querydict:
+	#querydict = json.loads(query_string)
+	form = cgi.FieldStorage()
+	#print("basicQuerySite.processPostJson: Read complete", file=sys.stderr)
+	
+	querydict = {}
+	if not "sourcedb" in form:
 		raise Exception("POST data missing required key 'sourcedb'")
-	if not "tablename" in querydict:
+	else:
+		querydict["sourcedb"] = form["sourcedb"].value
+	if not "tablename" in form:
 		raise Exception("POST data missing required key 'tablename'")
-	if not "query" in querydict:
-		raise Exception("POST data missing required key 'query'")
-	if not "returnlimit" in querydict:
+	else:
+		querydict["tablename"] = form["tablename"].value
+	if not "query" in form:
+		querydict["query"] = ""
+	else:
+		querydict["query"] = form["query"].value
+	if not "returnlimit" in form:
 		querydict["returnlimit"] = 500
+	else:
+		querydict["returnlimit"] = form["returnlimit"].value
 	
+	# add the ../data/ to the sourcedb
+	querydict["sourcedb"] = "data/" + querydict["sourcedb"]
+	
+	#print("basicQuerySite.processPostJson: Done.", file=sys.stderr)
 	return querydict
 	
 def queryAndResult(queryDict):
+	#print("basicQuerySite.processPostJson: {}".format(queryDict), file=sys.stderr)
+	
 	bq = basicQuery(queryDict["sourcedb"], queryDict["tablename"], queryDict["returnlimit"])
 	result = bq.query(queryDict["query"])
 	return result
 
+
+#print("basicQuerySite: Running..", file=sys.stderr)
 response = ""
 try:
 	queryDict = processPostJson()
@@ -68,6 +96,9 @@ except Exception as err:
 print("Content-Type: application/json")    # HTML is following
 print()      
 print(response)
+print()
+#print("basicQuerySite: Done", file=sys.stderr)
+
 		
 		 
 

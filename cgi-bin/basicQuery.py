@@ -56,6 +56,8 @@ Called by other modules and returns a JSON object with the results of the query,
 
 import sqlite3
 from SimpleSPL import SimpleSPLparse
+import sys
+import os
 import json
 
 class basicQuery:
@@ -67,15 +69,24 @@ class basicQuery:
 		
 		# retLimit limits the number of values that are returned
 		# set to False to prevent return limiting
-		self.retLimit = retLimit
+		if (type(retLimit) == str):
+			self.retLimit = int(retLimit)
+		elif (type(retLimit) == bool):
+			self.retLimit = False
+		else:
+			self.retLimit = retLimit
 
 	def query(self, querystr):
 		"""
 		Accepts the query, gets the SQL statement from parser, gets the results, packages in json and returns.
 		"""
 		resultsDict = {}
+		#print("basicQuery.query: my current working directory: {}".format(os.getcwd()), file=sys.stderr)
+	
 		try:
-			# initial set up			
+			# initial set up	
+			#print("basicQuery.query: attempting to open dbfile {}".format(self.sourcedb), file=sys.stderr)
+	
 			conn = sqlite3.connect(self.sourcedb)		
 			c = conn.cursor()
 			parser = SimpleSPLparse(conn, self.tablename)

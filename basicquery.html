@@ -64,15 +64,15 @@
 						<form action="#" class="col s12">
     						<div class="row">
         						<div class="input-field col s4">
-        							<input placeholder="Source DB filename" id="sourcedb" type="text" >
+        							<input placeholder="Source DB filename" id="sourcedb" type="text" value="filetree.db" >
           						<label for="sourcedb">Source DB:</label>
         						</div>
         						<div class="input-field col s4">
-        							<input placeholder="Tablename in DB" id="tablename" type="text" >
+        							<input placeholder="Tablename in DB" id="tablename" type="text" value="filesysdata">
           						<label for="sourcedb">Tablename:</label>
         						</div>
         						<div class="input-field col s4">
-        							<input placeholder="Return limit" id="returnlimit" type="text" >
+        							<input placeholder="Return limit" id="returnlimit" type="text" value="500">
           						<label for="sourcedb">Return Limit:</label>
         						</div>
         					</div>
@@ -88,8 +88,10 @@
         						</div>
         					</div>
         				</form>
-						Results
+						<div class="row" id="queryResults">
+							Results						
 						<span id ="end-of-results"></span>
+						</div>
 					</div>	
 						 <!-- End of the query and results area -->
 				</div>
@@ -128,6 +130,8 @@
 	<script type="text/javascript" src="js/jstat.min.js"></script>	
 	<script type="text/javascript" src="js/Chart.bundle.min.js"></script>	
 	<script type="text/javascript" src="js/basicQuery/basicqueryStartup.js"></script>
+	<script type="text/javascript" src="js/basicQuery/queryForm.js"></script>
+	<script type="text/javascript" src="js/basicQuery/queryResults.js"></script>
 	<script type="text/javascript" src="js/materialize.min.js"></script>
 </body>
 </html>
