@@ -21,7 +21,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 Parses a simplified verion of SPL into SQL select statements, currently set for sqlite use.
 
 Search terms are space-delimited and assumed OR, next term can be restricted with an AND or a NOT
-Terms that are compounded by a ":" are limiters for a specific field (and fields = columns)
+Terms pre-pended by (-) are interpreted as "NOT"
+Terms that are joined by standard logic operators (=, >=, <=, !=, >, <) are limiters for a specific field (and fields = columns)
 
 """
 
@@ -54,6 +55,7 @@ class SimpleSPLparse:
 		Builds and sets a list of all column names in the subject table
 		This is needed to ensure field limiters (i.e. first_name:mike) don't generate sql errors by asking for columns that don't exist
 		"""
+		self.columns = []
 		query = 'PRAGMA table_info('+self.tablename+')'
 		print(query)
 		c = self.dbconn.cursor()
@@ -67,6 +69,9 @@ class SimpleSPLparse:
 		self.columns = []
 		for column in result:
 			 self.columns.append(column[name_col])
+			 
+		return self.columns
+			
 		
 	def nextNamedParameter(self):
 		# returns the text of the next named parameter and then increments
@@ -170,19 +175,24 @@ class SimpleSPLparse:
 	def columnLimiter(self, token):
 		# Column limiter only active in select mode
 		if (self.currentMode != Mode.SELECT):
-			return False, None, None
-		regex = r"(.+):(.+)"
+			return False
+			
+		regex = r"(\w+)(>=|<=|!=|>|<|=)(\w+)"
 		found = re.findall(regex, token)
 		if (len(found)):
 			paramStr = self.nextNamedParameter()
 			column = found[0][0]
-			value = found[0][1]
+			operator = found[0][1]
+			value = found[0][2]
+			
+			# does column name exist in the table?
 			if (len(self.columns) == 0):
 				# Need to load the columns up
 				self.getColumns()
 			if not column in self.columns:
 				raise NameError('There is no field named "'+column+'" in this database.')
-			retString = column + "=:"+paramStr
+				
+			retString = column + operator + ":" + paramStr
 			self.logicJoin(self.whereList, retString)
 			retDict = {paramStr:value}
 			self.paramDict = {**self.paramDict, **retDict}
