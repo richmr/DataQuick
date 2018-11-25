@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!--Import Google Icon Font-->
+	<!-- <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> -->
+	<link href="fonts/Material/MaterialIcons.css" rel="stylesheet">
+	<!--Import materialize.css-->
+	<link rel="shortcut icon" href="unlock.ico" type="image/x-icon" />
+	<link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+	<link type="text/css" rel="stylesheet" href="css/dynamic-chips.css"/>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	 
+	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<meta charset="utf-8" />
+<title>Basic Query</title>
+</head>
+<body>
+	<!-- <div class="container"> -->
+		<!-- Everything should be in a single row.. -->
+		<div class="row">
+			<!-- Main page area -->
+			<!-- Left bar area/spacer -->
+			<div class="col s1">
+			</div>
+			<!-- Top action bar over the main table -->
+			<div class="col s9">
+				<br><br>
+				<div class="col s2 valign-wrapper">
+					<!-- <i class="small material-icons">undo</i>
+					<i class="small material-icons">redo</i>	 -->	
+				</div>
+				<div class="col s3 offset-s2 valign-wrapper">
+					<h5><span id="portfolioName">Basic Query</span></h5>  <!-- <i class="small material-icons">arrow_drop_down</i> -->
+				</div>
+				<div class="col s2 offset-s3 valign-wrapper">
+					<a class="waves-effect modal-trigger" href="#BQueryAbout">
+						<i id="info" class="small material-icons action-icons" style="padding-right:5px">info_outline</i>
+					</a>
+					<!-- <input type="file" id="pickDataFile" name="upload" style="visibility: hidden; width: 1px; height: 1px" />
+					<a class="waves-effect" href="#!">
+						<i id="load_data" class="small material-icons action-icons" style="padding-right:5px">folder_open</i>
+					</a>
+					<a class="waves-effect" href="#!">
+						<i id="save_data" class="small material-icons action-icons">save</i>
+					</a>
+					<a class="waves-effect" href="#!">
+						<i id="combo_list" class="small material-icons action-icons">list</i>
+					</a> -->
+				</div>
+				<br><br><br><br> <!-- Don't know why row formatting is not working here, but need to move on.. -->
+				<div id="work-area">
+					<div id="field-analysis-entries" class="col s3">
+					Future field analysis?
+						<div class="row">
+						<!-- Combo entry -->
+						
+	  					</div>	
+	  					<span id="last-fieldentry"></span>
+					</div>
+					<div id="query-area" class="col s9">
+						<form action="#" class="col s12">
+    						<div class="row">
+        						<div class="input-field col s4">
+        							<input placeholder="Source DB filename" id="sourcedb" type="text" >
+          						<label for="sourcedb">Source DB:</label>
+        						</div>
+        						<div class="input-field col s4">
+        							<input placeholder="Tablename in DB" id="tablename" type="text" >
+          						<label for="sourcedb">Tablename:</label>
+        						</div>
+        						<div class="input-field col s4">
+        							<input placeholder="Return limit" id="returnlimit" type="text" >
+          						<label for="sourcedb">Return Limit:</label>
+        						</div>
+        					</div>
+        					<div class="row">
+        						<div class="input-field col s10">
+        							<input placeholder="Type query here" id="query" type="text" >
+          						<label for="sourcedb">Query:</label>
+        						</div>
+        						<div class="col s2">
+									<button id="sendQuery" class="btn waves-effect waves-light" type="submit" name="action">Search
+    										<i class="material-icons right">send</i>
+  									</button>        						
+        						</div>
+        					</div>
+        				</form>
+						Results
+						<span id ="end-of-results"></span>
+					</div>	
+						 <!-- End of the query and results area -->
+				</div>
+														
+			</div>
+			
+			<!-- Side menu -->
+			<div class="col s2">
+				<br>
+				<a id="resetData" class="waves-effect waves-light btn red lighten-2 white-text">Reset All</a>
+			</div>
+			
+			
+				
+			<!-- About modal -->		    
+		    <div id="BQueryAbout" class="modal">
+				<div id="BQueryAbout-content" class="modal-content">
+			      <span id="BQueryAbout-header"><h5>Basic Query</h5></span>
+			      <p>Part of the DataQuick framework</p>
+			      <p>This has only been tested in Chrome on a desktop.  Mobile touch screen tests have not gone well.</p>
+			      <p>Copyright 2018, Michael Rich</p>
+			      <p><a href="https://twitter.com/miketofet" target="_blank">Contact me on Twitter</a></p>
+			        
+			   </div>
+			    <div id="BQueryAbout-footer" class="modal-footer">
+				   <a href="#!" class="modal-action modal-close waves-effect waves-green btn green white-text">Ok</a>
+			    </div>
+		    </div>
+		    
+			    
+		   
+			
+		</div>
+	
+	<script type="text/javascript" src="js/lodash.js"></script>	
+	<script type="text/javascript" src="js/jstat.min.js"></script>	
+	<script type="text/javascript" src="js/Chart.bundle.min.js"></script>	
+	<script type="text/javascript" src="js/basicQuery/basicqueryStartup.js"></script>
+	<script type="text/javascript" src="js/materialize.min.js"></script>
+</body>
+</html>

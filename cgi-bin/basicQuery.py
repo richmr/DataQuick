@@ -107,15 +107,10 @@ class basicQuery:
 				
 			resultsDict["Results"] = results
 		except Exception as err:
-			print("****ERROR: {}".format(err))
+			#print("****ERROR: {}".format(err))
 			resultsDict["Error"] = True
 			resultsDict["ErrorMsg"] = "{}".format(err)
 			
 		return json.dumps(resultsDict)
-		
-			
-				
-			
-		
 		
 		

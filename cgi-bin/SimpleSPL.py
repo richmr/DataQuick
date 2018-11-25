@@ -57,11 +57,9 @@ class SimpleSPLparse:
 		"""
 		self.columns = []
 		query = 'PRAGMA table_info('+self.tablename+')'
-		print(query)
 		c = self.dbconn.cursor()
 		c.execute(query)
 		result = c.fetchall()
-		print(len(result))
 		# Going to assume sqlite keeps its PRAGMA return format and column order, this could clearly cause problems later
 		name_col = 1
 		type_col = 2
