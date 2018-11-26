@@ -52,7 +52,7 @@
 				</div>
 				<br><br><br><br> <!-- Don't know why row formatting is not working here, but need to move on.. -->
 				<div id="work-area">
-					<div id="field-analysis-entries" class="col s3">
+					<div id="field-analysis-entries" class="col s2">
 					Future field analysis?
 						<div class="row">
 						<!-- Combo entry -->
@@ -60,7 +60,7 @@
 	  					</div>	
 	  					<span id="last-fieldentry"></span>
 					</div>
-					<div id="query-area" class="col s9">
+					<div id="query-area" class="col s10">
 						<form action="#" class="col s12">
     						<div class="row">
         						<div class="input-field col s4">
@@ -88,6 +88,13 @@
         						</div>
         					</div>
         				</form>
+        				<div class="row" id="warningBlock">
+							<div class="col s12">
+								<ul class="collection orange lighten-3">
+									<li><b>Warning:</b><br><span id="warningMsg">Warning message here</span></li>								
+								</ul>							
+							</div>        				
+        				</div>
 						<div class="row" id="queryResults">
 							<div class="col s12">
 							<ul id="results_collapsible" class="collapsible expandable">
@@ -127,7 +134,16 @@
 			    </div>
 		    </div>
 		    
-			    
+		<!-- Error modal -->		    
+		    <div id="BQueryError" class="modal">
+				<div id="BQueryError-content" class="modal-content">
+			      <span id="BQueryError-header"><h5 class="red-text">Error</h5></span>
+			      <p id="BQueryError-ErrMsg">Error text here</p>
+			   </div>
+			    <div id="BQueryError-footer" class="modal-footer">
+				   <a href="#!" class="modal-action modal-close waves-effect waves-green btn green white-text">Ok</a>
+			    </div>
+		    </div>	    
 		   
 			
 		</div>

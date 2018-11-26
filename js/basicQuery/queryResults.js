@@ -22,8 +22,11 @@ responseHeaderFields = ["filename"]
 // Fields that get translated to human readable times
 responseTimeFields = []
 
+$("#warningBlock").hide()
+
 function queryResponse (data) {
 	console.log("Query response received");
+	$("#warningBlock").hide();
 
 	if (data['Error']) {
 		errorResponse(data);
@@ -36,13 +39,15 @@ function queryResponse (data) {
 }
 
 function errorResponse(data) {
-	// TODO
 	console.log(JSON.stringify(data));
+	$("#BQueryError-ErrMsg").text(data["ErrorMsg"]);
+	$("#BQueryError").modal('open');
 }
 
 function warningResponse(data) {
-	// TODO
 	console.log(JSON.stringify(data));
+	$("#warningMsg").text(data["WarningMsg"]);
+	$("#warningBlock").show()
 }
 
 function showResults(results) {
@@ -95,7 +100,7 @@ function resultHeader(aresult) {
 function resultTable(aresult) {
 	// Builds and returns a table in a <li> element
 	htmlsnippet = '<div class="collapsible-body">';
-	htmlsnippet += '<table><thead><tr><th>Field</th><th>Value</th></tr></thead>';
+	htmlsnippet += '<table class="striped"><thead><tr><th>Field</th><th>Value</th></tr></thead>';
 	htmlsnippet += '<tbody>';
 	$.each(aresult, function (key, value) {
 			htmlsnippet += '<tr>';
