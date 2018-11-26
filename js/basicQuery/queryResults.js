@@ -17,10 +17,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 // Fields to displayed in results header
-responseHeaderFields = ["filename"]
+responseHeaderFields = ["filename"];
 
 // Fields that get translated to human readable times
-responseTimeFields = []
+responseTimeFields = [];
 
 $("#warningBlock").hide()
 
@@ -80,19 +80,22 @@ function resultHeader(aresult) {
 	htmlsnippet = '<li><div class="collapsible-header">';
 	resultKeys = Object.keys(aresult);
 	resultValues = Object.values(aresult);
-	if (responseHeaderFields.length == 0) {
+	
+	headerdata = [];
+	noHeaderFound = true;
+	$.each(responseHeaderFields, function (index, fieldname) {
+		if (fieldname in aresult) {
+			noHeaderFound = false;
+			headerdata.push(aresult[fieldname]);			
+		}
+	});
+	htmlsnippet += headerdata.join(",");	
+		
+	if (noHeaderFound) {
 		// Then the header is a	concatenated string of values
 		htmlsnippet += resultValues.join(",");
-	} else {
-		// We only show the fields of interest
-		headerdata = [];
-		$.each(responseHeaderFields, function (index, fieldname) {
-			if (fieldname in aresult) {
-				headerdata.push(aresult[fieldname]);			
-			}
-		});
-		htmlsnippet += headerdata.join(",");	
 	}
+		
 	htmlsnippet += "</div>";
 	return htmlsnippet;
 }
@@ -113,3 +116,23 @@ function resultTable(aresult) {
 
 }
 
+<ul id="featured_collapsible" class="collapsible expandable">
+						<li>
+						      <div class="collapsible-header">Results</div>
+						      <div class="collapsible-body"><span>Send a query!</span></div>
+						</li>
+				</ul>
+				<br>
+				Fields
+				<ul id="fields_collapsible" class="collapsible expandable">
+						<li>
+						      <div class="collapsible-header">Results</div>
+						      <div class="collapsible-body"><span>Send a query!</span></div>
+						</li>
+				</ul>			
+				
+function setupFieldsMenu() {
+
+}
+
+ 
