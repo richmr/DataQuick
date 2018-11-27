@@ -131,7 +131,7 @@ function resultTable(aresult) {
 						      <div class="collapsible-body"><span>Send a query!</span></div>
 						</li>
 				</ul>			
-				
+*/				
 function setupFieldsMenu() {
 
 }
