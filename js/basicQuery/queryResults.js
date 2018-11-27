@@ -135,6 +135,6 @@ function resultTable(aresult) {
 function setupFieldsMenu() {
 
 }
-*/
+
 
  

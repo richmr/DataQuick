@@ -4,14 +4,15 @@ from SimpleSPL import SimpleSPLparse
 from fileTree import fileTree
 import sqlite3
 from basicQuery import basicQuery
+import random
 
 #conn = sqlite3.connect('../data/test.db')
 #c = conn.cursor()
 #pt = SimpleSPLparse(conn, 'ftstest')
 
-conn = sqlite3.connect('../data/fileTree.db')
+conn = sqlite3.connect('../data/fakedata.db')
 c = conn.cursor()
-pt = SimpleSPLparse(conn, "filesysdata")
+pt = SimpleSPLparse(conn, "fakedata")
 
 def test1():
 	pt.getColumns()
@@ -22,7 +23,7 @@ def test2():
 	execandfetch()
 		
 def execandfetch():
-	#print(pt.SQLStatement)
+	print(pt.SQLStatement)
 	#print(pt.paramDict)
 	if len(pt.paramDict):
 		c.execute(pt.SQLStatement, pt.paramDict)
@@ -72,6 +73,28 @@ def test10():
 	bq = basicQuery('../data/fileTree.db', "filesysdata", 3)
 	result = bq.query("")
 	print(result)	
+
+def buildfakedata():
+	conn = sqlite3.connect('../data/fakedata.db')
+	c = conn.cursor()
+	#createStatement = "CREATE VIRTUAL TABLE fakedata USING fts3(person, number, letter);" # size, creation_date, creation_time, modification_date, modification_time, owner);"
+	#c.execute(createStatement)
+	#conn.commit()
+	persons = ['alpha','beta','charlie','delta','elmo']
+	insertStatement = "INSERT INTO fakedata(person, number, letter) VALUES (?, ?, ?)"
+	for person in persons:
+		inserts = random.randrange(50,110)
+		for i in range(inserts):
+			number = random.randint(1,11)
+			letter = chr(ord("a")+random.randint(0,25))
+			c.execute(insertStatement, (person, number, letter))
+			conn.commit()
+	
+def test11():
+	pt.parseQuery("person=alpha | sort(number) desc sort(letter)")
+	execandfetch()				
+		
+
 	
 #------------- Tests ---------------------
 #print(test.columnLimiter("bobyouruncle", Mode.SELECT))
@@ -85,7 +108,7 @@ def test10():
 #pt.parseQuery("Windows -temp")
 #print(pt.SQLStatement)
 #print(pt.paramDict)
-test10()
-
+#buildfakedata()
+test11()
 
 print("done")

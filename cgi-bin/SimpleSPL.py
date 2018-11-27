@@ -33,6 +33,8 @@ import re
 class Mode(Enum):
 	SELECT = 1
 	SORT = 2
+	PIPE = 3
+	STATS = 4
 
 class SimpleSPLparse:
 	
@@ -69,6 +71,16 @@ class SimpleSPLparse:
 			 self.columns.append(column[name_col])
 			 
 		return self.columns
+		
+	def checkColumn(self, column):
+		"""
+		returns true if the column is in the table
+		"""
+		# does column name exist in the table?
+		if (len(self.columns) == 0):
+			# Need to load the columns up
+			self.getColumns()
+		return (column in self.columns)
 			
 		
 	def nextNamedParameter(self):
@@ -125,7 +137,7 @@ class SimpleSPLparse:
 		self.ftsStart = [self.tablename, 'MATCH']
 		self.ftsTermList = []
 		self.paramDict = {}
-		# TODO: order by
+		self.orderByList = []
 		# TODO: group by
 		
 		# Initial States
@@ -139,6 +151,12 @@ class SimpleSPLparse:
 			if (self.columnLimiter(token)):
 				continue
 			if (self.ANDORNOT(token)):
+				continue
+			if (self.pipe(token)):
+				continue
+			if (self.sort(token)):
+				continue
+			if (self.ASCDESC(token)):
 				continue
 			if (self.ftsSearchTerm(token)):
 				continue
@@ -159,6 +177,11 @@ class SimpleSPLparse:
 			# The parameters from fts form a long string parameter, not direct into the SQL statement
 			ftsSearchTermStr = " ".join(self.ftsTermList)
 			self.paramDict = {**self.paramDict, **{ftsTermParam:ftsSearchTermStr}}
+		if (len(self.orderByList)):
+			# pop the last trailing , off
+			self.orderByList.pop()
+			self.SQLStatement += '\nORDER BY\n'
+			self.SQLStatement += '\n'.join(self.orderByList)+'\n'
 		self.SQLStatement += ';'
 			
 		#Parse done, data stored in class variables
@@ -183,12 +206,8 @@ class SimpleSPLparse:
 			operator = found[0][1]
 			value = found[0][2]
 			
-			# does column name exist in the table?
-			if (len(self.columns) == 0):
-				# Need to load the columns up
-				self.getColumns()
-			if not column in self.columns:
-				raise NameError('There is no field named "'+column+'" in this database.')
+			if not self.checkColumn(column):
+				raise NameError('select: There is no field named "'+column+'" in this database.')
 				
 			retString = column + operator + ":" + paramStr
 			self.logicJoin(self.whereList, retString)
@@ -208,6 +227,9 @@ class SimpleSPLparse:
 		return False
 		
 	def ftsSearchTerm(self, token):
+		# Column limiter only active in select mode
+		if (self.currentMode != Mode.SELECT):
+			return False
 		# check for the ignore symbol ("-" prepended to the term)
 		regex = r"-(.+)"
 		found = re.findall(regex, token)
@@ -217,6 +239,41 @@ class SimpleSPLparse:
 		self.logicJoin(self.ftsTermList, token)
 		return True
 
+	def pipe(self, token):
+		if (token == '|'):
+			self.currentMode = Mode.PIPE
+			return True
+		return False
+		
+	def sort(self, token):
+		# sort token needs to be preceded immediately by a pipe
+		if (self.currentMode == Mode.PIPE):
+			regex = r"sort\((.+)\)"
+			found = re.findall(regex, token, re.IGNORECASE)
+			if (len(found)):
+				column = found[0]
+				if not self.checkColumn(column):
+					raise NameError('sort: There is no field named "'+column+'" in this database.')
+				self.orderByList.append(column)
+				self.orderByList.append(",")
+				self.currentMode = Mode.SORT
+				return True
+		
+		return False
+		
+	def ASCDESC(self, token):
+		if (self.currentMode == Mode.SORT):
+			regex = r"(^asc$|^desc$)"
+			found = re.findall(regex, token, re.IGNORECASE)
+			if (len(found)):
+				# remove the last trailing comma
+				self.orderByList.pop()
+				self.orderByList.append(found[0].upper())
+				self.orderByList.append(",")
+				self.currentMode = Mode.PIPE
+				return True
+		
+		return False
 
 
 		
