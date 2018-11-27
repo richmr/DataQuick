@@ -116,6 +116,7 @@ function resultTable(aresult) {
 
 }
 
+/*
 <ul id="featured_collapsible" class="collapsible expandable">
 						<li>
 						      <div class="collapsible-header">Results</div>
@@ -130,7 +131,7 @@ function resultTable(aresult) {
 						      <div class="collapsible-body"><span>Send a query!</span></div>
 						</li>
 				</ul>			
-				
+*/				
 function setupFieldsMenu() {
 
 }

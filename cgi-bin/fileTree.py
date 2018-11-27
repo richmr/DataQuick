@@ -32,14 +32,35 @@ Includes:
 
 import sqlite3
 import os
-import pwd
+if os.name != 'nt':
+	import pwd
+else:
+	import subprocess
+
 
 class fileTree:
 	
 	def __init__(self, rootStart="/", dbname="fileTree.db"):
 		self.rootStart = rootStart
 		self.dbname = dbname
+	
+	def winOwner(self, fullpath):
+		# Returns the owner of an object using Windows Powershell
+		# obviously this only works on Windows
+		if (os.name != 'nt'):
+			return "N/A"
 		
+		powerShellPath = r'C:\WINDOWS\system32\WindowsPowerShell\v1.0\powershell.exe'
+		powerShellCmd = "(get-childitem {}).GetAccessControl().Owner".format(fullpath)
+
+		p = subprocess.Popen([powerShellPath, powerShellCmd], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+		output, error = p.communicate()
+		rc = p.returncode
+		#print("Return code given to Python script is: " + str(rc))
+		#print("stdout: " + output.decode("utf-8"))
+		#print("stderr: " + error.decode("utf-8"))
+		return output.decode("utf-8")
+	
 	def makedb(self):
 		# Open db in the current working directory
 		conn = sqlite3.connect(self.dbname)
@@ -68,10 +89,13 @@ class fileTree:
 				
 				filestats = os.stat(fullpath)
 				
-				# Owner				
-				if not filestats.st_uid in userDict:
-					userDict[filestats.st_uid] = pwd.getpwuid(filestats.st_uid).pw_name
-				paramDict["owner"] = userDict[filestats.st_uid]
+				# Owner
+				if (os.name != 'nt'):
+					if not filestats.st_uid in userDict:
+						userDict[filestats.st_uid] = pwd.getpwuid(filestats.st_uid).pw_name
+					paramDict["owner"] = userDict[filestats.st_uid]
+				else:
+					paramDict["owner"] = self.winOwner(fullpath)
 				
 				# filesize
 				paramDict["filesize"] = filestats.st_size
