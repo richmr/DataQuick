@@ -59,7 +59,7 @@ class fileTree:
 		#print("Return code given to Python script is: " + str(rc))
 		#print("stdout: " + output.decode("utf-8"))
 		#print("stderr: " + error.decode("utf-8"))
-		return output.decode("utf-8")
+		return output.decode("utf-8").strip()
 	
 	def makedb(self):
 		# Open db in the current working directory
