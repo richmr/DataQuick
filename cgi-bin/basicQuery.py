@@ -87,7 +87,8 @@ class basicQuery:
 			# initial set up	
 			#print("basicQuery.query: attempting to open dbfile {}".format(self.sourcedb), file=sys.stderr)
 	
-			conn = sqlite3.connect(self.sourcedb)		
+			conn = sqlite3.connect(self.sourcedb)
+			conn.row_factory = sqlite3.Row		
 			c = conn.cursor()
 			parser = SimpleSPLparse(conn, self.tablename)
 			
@@ -108,6 +109,11 @@ class basicQuery:
 					results_raw = results_raw[:self.retLimit]
 			
 			results = []
+			for result_raw in results_raw:
+				keys = result_raw.keys();
+				aResult = dict(zip(keys, tuple(result_raw)))
+				results.append(aResult)
+			"""				
 			# zip the results up
 			column_keys = parser.getColumns()
 			# PRAGMA does not return the hidden docid for a FTS
@@ -115,7 +121,7 @@ class basicQuery:
 			for raw_result in results_raw:
 				aResult = dict(zip(column_keys, raw_result))
 				results.append(aResult)
-				
+			"""				
 			resultsDict["Results"] = results
 		except Exception as err:
 			#print("****ERROR: {}".format(err))
